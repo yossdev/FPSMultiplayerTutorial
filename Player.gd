@@ -22,6 +22,12 @@ func _unhandled_input(event):
 		camera.rotate_x(-event.relative.y * sensivity)
 		camera.rotation.x = clamp(camera.rotation.x, -PI/2, PI/2)
 	
+	if Input.is_action_pressed("run") and is_on_floor():
+		speed = RUN
+	
+	if not Input.is_action_pressed("run") and is_on_floor():
+		speed =  WALK
+	
 	if Input.is_action_just_pressed("shoot") \
 		and anim_player.current_animation != "shoot":
 		play_shoot_fx()
@@ -35,22 +41,17 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
 	
-	if Input.is_action_pressed("run") and is_on_floor():
-		speed = RUN
-	
-	if not Input.is_action_pressed("run") and is_on_floor():
-		speed =  WALK
-	
 	# Get the input direction and handle the movement/deceleration.	
 	var input_dir = Input.get_vector("left", "right", "up", "down")
 	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	if direction:
-		velocity.x = direction.x * speed
-		velocity.z = direction.z * speed
-	else:
-		velocity.x = move_toward(velocity.x, slow_and_stop(velocity.x, delta * gravity), speed)
-		velocity.z = move_toward(velocity.z, slow_and_stop(velocity.z, delta * gravity), speed)
-
+	if is_on_floor():
+		if direction:
+			velocity.x = direction.x * speed
+			velocity.z = direction.z * speed
+		else:
+			velocity.x = move_toward(velocity.x, slow_and_stop(velocity.x, delta * gravity), speed)
+			velocity.z = move_toward(velocity.z, slow_and_stop(velocity.z, delta * gravity), speed)
+	
 	# Handle player animation 
 	if anim_player.current_animation == "shoot":
 		pass
@@ -67,10 +68,10 @@ func play_shoot_fx() -> void:
 	muzzle_flash.restart()
 	muzzle_flash.emitting = true
 
-func slow_and_stop(velocity, decelerate) -> float:
-	if velocity < 0 and velocity - decelerate < 0:
-		return velocity + decelerate
-	elif velocity > 0 and velocity - decelerate > 0:
-		return velocity - decelerate
+func slow_and_stop(vel, decelerate) -> float:
+	if vel < 0 and vel - decelerate < 0:
+		return vel + decelerate
+	elif vel > 0 and vel - decelerate > 0:
+		return vel - decelerate
 	else:
 		return 0
