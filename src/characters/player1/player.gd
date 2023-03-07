@@ -1,5 +1,6 @@
 extends CharacterBody3D
 
+# Get References
 @onready var camera = $Camera3D
 @onready var anim_player = $AnimationPlayer
 @onready var muzzle_flash = $Camera3D/Pistol/MuzzleFlash
@@ -13,10 +14,23 @@ var gravity: float = 20.0
 var sensivity: float = .005
 var speed: float = WALK
 
+# multiplayer authority for controlling each unique player
+# need to be check on _ready, _unhandled_input, and _physics_process
+func _enter_tree():
+	# has to be an interger
+	set_multiplayer_authority(str(name).to_int())
+
 func _ready():
+	if not is_multiplayer_authority(): return
+	
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	
+	# set camera for the correct current player
+	camera.current = true
 
 func _unhandled_input(event):
+	if not is_multiplayer_authority(): return
+	
 	if event is InputEventMouseMotion:
 		rotate_y(-event.relative.x * sensivity)
 		camera.rotate_x(-event.relative.y * sensivity)
@@ -30,9 +44,11 @@ func _unhandled_input(event):
 	
 	if Input.is_action_just_pressed("shoot") \
 		and anim_player.current_animation != "shoot":
-		play_shoot_fx()
+		play_shoot_fx.rpc()
 
 func _physics_process(delta):
+	if not is_multiplayer_authority(): return
+	
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y -= gravity * delta
@@ -62,6 +78,9 @@ func _physics_process(delta):
 
 	move_and_slide()
 
+# will be call on the remote instance
+# call_local args will make this call on both remote and local
+@rpc("call_local")
 func play_shoot_fx() -> void:
 	anim_player.stop()
 	anim_player.play("shoot")
@@ -75,3 +94,8 @@ func slow_and_stop(vel, decelerate) -> float:
 		return vel - decelerate
 	else:
 		return 0
+
+
+func _on_animation_player_animation_finished(anim_name):
+	if anim_name == "shoot":
+		anim_player.play("idle")

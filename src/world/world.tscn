@@ -1,8 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://p168fwunsmrl"]
+[gd_scene load_steps=6 format=3 uid="uid://p168fwunsmrl"]
 
 [ext_resource type="Script" path="res://src/world/world.gd" id="1_bciev"]
 [ext_resource type="PackedScene" path="res://src/world/environment.tscn" id="1_tlf52"]
-[ext_resource type="PackedScene" path="res://src/characters/player1/player.tscn" id="2_ep0po"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_gwglx"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -29,4 +28,52 @@ environment = SubResource("Environment_5euxk")
 
 [node name="Environtment" parent="." instance=ExtResource("1_tlf52")]
 
-[node name="Player" parent="." instance=ExtResource("2_ep0po")]
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="MainMenu" type="PanelContainer" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 372.0
+offset_top = 224.0
+offset_right = -372.0
+offset_bottom = -224.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/MainMenu"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MainMenu/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Label" type="Label" parent="CanvasLayer/MainMenu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Main Menu"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HostButton" type="Button" parent="CanvasLayer/MainMenu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Host"
+
+[node name="JoinButton" type="Button" parent="CanvasLayer/MainMenu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Join"
+
+[node name="AddressEntry" type="LineEdit" parent="CanvasLayer/MainMenu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+placeholder_text = "Enter Address to Join Here"
+alignment = 1
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://src/characters/player1/player.tscn")
+spawn_path = NodePath("..")
+
+[connection signal="pressed" from="CanvasLayer/MainMenu/MarginContainer/VBoxContainer/HostButton" to="." method="_on_host_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/MainMenu/MarginContainer/VBoxContainer/JoinButton" to="." method="_on_join_button_pressed"]
