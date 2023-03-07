@@ -1,6 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://6peipwe510n4"]
+[gd_scene load_steps=6 format=3]
 
-[ext_resource type="PackedScene" uid="uid://d1kutn67gbxek" path="res://Environtment.blend" id="1_vbn6t"]
+[ext_resource type="PackedScene" uid="uid://d1kutn67gbxek" path="res://assets/models/Environtment.blend" id="1_vbn6t"]
 [ext_resource type="Texture2D" uid="uid://bi0bcx4akfexm" path="res://addons/kenney_prototype_textures/dark/texture_09.png" id="2_w1s8v"]
 [ext_resource type="Texture2D" uid="uid://drgelr6umprkx" path="res://addons/kenney_prototype_textures/orange/texture_10.png" id="3_diq6d"]
 

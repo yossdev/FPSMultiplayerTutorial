@@ -1,8 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://5v8tl0s2pyvc"]
+[gd_scene load_steps=7 format=3 uid="uid://p168fwunsmrl"]
 
-[ext_resource type="Script" path="res://world.gd" id="1_bciev"]
-[ext_resource type="PackedScene" uid="uid://6peipwe510n4" path="res://environtment.tscn" id="1_tlf52"]
-[ext_resource type="PackedScene" uid="uid://dupjxbjv1i08d" path="res://player.tscn" id="2_ep0po"]
+[ext_resource type="Script" path="res://src/world/world.gd" id="1_bciev"]
+[ext_resource type="PackedScene" path="res://src/world/environment.tscn" id="1_tlf52"]
+[ext_resource type="PackedScene" path="res://src/characters/player1/player.tscn" id="2_ep0po"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_gwglx"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -21,7 +21,7 @@ glow_enabled = true
 script = ExtResource("1_bciev")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+transform = Transform3D(-0.592184, -0.515944, 0.618967, 0.350718, 0.526536, 0.77444, -0.725475, 0.675694, -0.130855, 0, 58.7175, -6.02796)
 shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]

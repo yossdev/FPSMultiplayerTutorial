@@ -1,7 +1,7 @@
-[gd_scene load_steps=16 format=3 uid="uid://dupjxbjv1i08d"]
+[gd_scene load_steps=16 format=3]
 
-[ext_resource type="Script" path="res://Player.gd" id="1_rlu3y"]
-[ext_resource type="PackedScene" uid="uid://bx33go7rmhx73" path="res://Pistol.blend" id="2_7lk6n"]
+[ext_resource type="Script" path="res://src/characters/player1/player.gd" id="1_rlu3y"]
+[ext_resource type="PackedScene" uid="uid://bx33go7rmhx73" path="res://assets/models/Pistol.blend" id="2_7lk6n"]
 [ext_resource type="Texture2D" uid="uid://cwe0flq1cclue" path="res://addons/kenney_particle_pack/star_06.png" id="3_u3316"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_akwku"]
