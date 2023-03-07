@@ -4,12 +4,12 @@ extends CharacterBody3D
 @onready var anim_player = $AnimationPlayer
 @onready var muzzle_flash = $Camera3D/Pistol/MuzzleFlash
 
-const WALK = 7.0
-const RUN = 10.0
-const JUMP_VELOCITY = 7.5
+const WALK: float = 7.0
+const RUN: float = 10.0
+const JUMP_VELOCITY: float = 7.5
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
-var gravity = 20.0
+var gravity: float = 20.0
 var sensivity: float = .005
 var speed: float = WALK
 
@@ -48,8 +48,8 @@ func _physics_process(delta):
 		velocity.x = direction.x * speed
 		velocity.z = direction.z * speed
 	else:
-		velocity.x = move_toward(velocity.x, 0, speed)
-		velocity.z = move_toward(velocity.z, 0, speed)
+		velocity.x = move_toward(velocity.x, slow_and_stop(velocity.x, delta * gravity), speed)
+		velocity.z = move_toward(velocity.z, slow_and_stop(velocity.z, delta * gravity), speed)
 
 	# Handle player animation 
 	if anim_player.current_animation == "shoot":
@@ -66,3 +66,11 @@ func play_shoot_fx() -> void:
 	anim_player.play("shoot")
 	muzzle_flash.restart()
 	muzzle_flash.emitting = true
+
+func slow_and_stop(velocity, decelerate) -> float:
+	if velocity < 0 and velocity - decelerate < 0:
+		return velocity + decelerate
+	elif velocity > 0 and velocity - decelerate > 0:
+		return velocity - decelerate
+	else:
+		return 0
