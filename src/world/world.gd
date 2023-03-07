@@ -28,6 +28,8 @@ func _on_host_button_pressed():
 	
 	# spawn host player (server)
 	add_player(multiplayer.get_unique_id())
+	
+	# upnp_setup()
 
 # Client
 func _on_join_button_pressed():
@@ -35,7 +37,8 @@ func _on_join_button_pressed():
 	hud.show()
 	
 	# localhost for testing locally
-	enet_peer.create_client("localhost", PORT)
+	# enet_peer.create_client("localhost", PORT)
+	enet_peer.create_client(address_entry.text, PORT)
 	multiplayer.multiplayer_peer = enet_peer
 
 # Spawn player (Server)
@@ -66,3 +69,19 @@ func update_health_bar(health_value):
 func _on_multiplayer_spawner_spawned(node):
 	if node.is_multiplayer_authority():
 		node.health_changed.connect(update_health_bar)
+
+# Setup UPNP to be able to play online
+func upnp_setup() -> void:
+	var upnp = UPNP.new()
+	
+	# Handling errors
+	var discover_result = upnp.discover()
+	assert(discover_result == UPNP.UPNP_RESULT_SUCCESS, "UPNP Discover Failed! Error %s" % discover_result)
+
+	assert(upnp.get_gateway() and upnp.get_gateway().is_valid_gateway(), "UPNP Invalid Gateway!")
+	
+	var map_result = upnp.add_port_mapping(PORT)
+	assert(map_result == UPNP.UPNP_RESULT_SUCCESS, "UPNP Port Mapping Failed! Error %s" % map_result)
+	
+	# No errors and proceed
+	print("Success! Join Address: %s" % upnp.query_external_address())
