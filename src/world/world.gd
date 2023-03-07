@@ -24,6 +24,7 @@ func _on_host_button_pressed():
 	
 	# spawn joined player on host (client join to server)
 	multiplayer.peer_connected.connect(add_player)
+	multiplayer.peer_disconnected.connect(remove_player)
 	
 	# spawn host player (server)
 	add_player(multiplayer.get_unique_id())
@@ -46,6 +47,13 @@ func add_player(peer_id):
 	# connect signal emitting from player after receiving damage
 	if player.is_multiplayer_authority():
 		player.health_changed.connect(update_health_bar)
+
+# peers are name to thier corresponding peer_id
+# remove player when quit
+func remove_player(peer_id):
+	var player = get_node_or_null(str(peer_id))
+	if player:
+		player.queue_free()
 
 # update health_bar for host player
 # for client is done from the MultiplayerSpawner Node
