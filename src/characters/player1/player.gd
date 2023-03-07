@@ -4,6 +4,9 @@ extends CharacterBody3D
 @onready var camera = $Camera3D
 @onready var anim_player = $AnimationPlayer
 @onready var muzzle_flash = $Camera3D/Pistol/MuzzleFlash
+@onready var raycast = $Camera3D/RayCast3D
+
+var health: int = 3
 
 const WALK: float = 7.0
 const RUN: float = 10.0
@@ -45,6 +48,9 @@ func _unhandled_input(event):
 	if Input.is_action_just_pressed("shoot") \
 		and anim_player.current_animation != "shoot":
 		play_shoot_fx.rpc()
+		if raycast.is_colliding():
+			var hit_player = raycast.get_collider()
+			hit_player.receive_damage.rpc_id(hit_player.get_multiplayer_authority())
 
 func _physics_process(delta):
 	if not is_multiplayer_authority(): return
@@ -87,6 +93,15 @@ func play_shoot_fx() -> void:
 	muzzle_flash.restart()
 	muzzle_flash.emitting = true
 
+# any_peer args needed to call this func on player that dont have authority
+# because they're receiving damage
+@rpc("any_peer")
+func receive_damage() -> void:
+	health -= 1
+	if health <= 0:
+		health = 3
+		position = Vector3.ZERO
+
 func slow_and_stop(vel, decelerate) -> float:
 	if vel < 0 and vel - decelerate < 0:
 		return vel + decelerate
@@ -94,7 +109,6 @@ func slow_and_stop(vel, decelerate) -> float:
 		return vel - decelerate
 	else:
 		return 0
-
 
 func _on_animation_player_animation_finished(anim_name):
 	if anim_name == "shoot":
